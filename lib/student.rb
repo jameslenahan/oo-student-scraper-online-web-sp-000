@@ -1,28 +1,15 @@
-class Student
+def self.scrape_index_page(index_url)
 
-  attr_accessor :name, :location, :twitter, :linkedin, :github, :blog, :profile_quote, :bio, :profile_url
-
-  @@all = []
-
-  def initialize(student_hash)
-    student_hash.each {|k, v| self.send(("#{k}="), v)}
-    @@all << self
-  end
-
-  def self.create_from_collection(students_array)
-    students_array.each do |student_hash|
-      self.new(student_hash)
+    students_hash = []
+    html = Nokogiri::HTML(open(index_url))
+    html.css(".student-card").collect do |student|
+      hash = {
+        name: student.css("h4.student-name").text,
+        location: student.css("p.student-location").text,
+        profile_url: "http://students.learn.co/" + student.css("a").attribute("href")
+      }
+      students_hash << hash
     end
-  end
-
-  def add_student_attributes(attributes_hash)
-    attributes_hash.each do |k, v|
-      self.send(("#{k}="), v)
-    end
-    self
-  end
-
-  def self.all
-    @@all
+    students_hash
   end
 end
