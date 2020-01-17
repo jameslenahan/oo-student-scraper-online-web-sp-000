@@ -12,7 +12,7 @@ class Scraper
       student_details[:name] = student.css("h4.student-name").text
       student_details[:location] = student.css("p.student-location").text
       profile_path = student.css("a").attribute("href").value
-      student_details[:profile_url] = './fixtures/student-site/index.html' + profile_path
+      student_details[:profile_url] = './fixtures/student-site/' + profile_path
       students << student_details
     end
     students
@@ -23,6 +23,7 @@ class Scraper
     html = open(profile_url)
     profile = Nokogiri::HTML(html)
 
+    # Social Links
 
     profile.css("div.main-wrapper.profile .social-icon-container a").each do |social|
       if social.attribute("href").value.include?("twitter")
